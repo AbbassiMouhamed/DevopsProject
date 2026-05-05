@@ -3,62 +3,67 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'apigateway'
+  - job_name: "apigateway"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8087']
+      - targets: ["api-gateway:8093"]
 
-  - job_name: 'config-server'
+  - job_name: "config-server"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8890']
+      - targets: ["config-server:8890"]
 
-  - job_name: 'eureka'
+  - job_name: "eureka"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8761']
+      - targets: ["eureka:8761"]
 
-  - job_name: 'users'
+  - job_name: "users"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8090']
+      - targets: ["users:8087"]
 
-  - job_name: 'forum'
+  - job_name: "courses"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8085']
+      - targets: ["courses:8086"]
 
-  - job_name: 'messaging'
+  - job_name: "quiz"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8086']
+      - targets: ["quiz:8088"]
 
-  - job_name: 'courses'
+  - job_name: "exams"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8091']
+      - targets: ["exams:8089"]
 
-  - job_name: 'quiz'
+  - job_name: "forum"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8088']
+      - targets: ["forum:8096"]
 
-  - job_name: 'exams'
+  - job_name: "messaging"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8092']
+      - targets: ["messaging:8092"]
 
-  - job_name: 'adaptive-learning'
+  - job_name: "privetcours"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8093']
+      - targets: ["privetcours:8091"]
 
-  - job_name: 'ai-assistant-service'
+  - job_name: "adaptive-learning"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8094']
+      - targets: ["adaptive-learning:8094"]
 
-  - job_name: 'privetcours'
+  - job_name: "ai-assistant-service"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['host.docker.internal:8095']
+      - targets: ["ai-assistant:8095"]
+
+  - job_name: "privetcours"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["host.docker.internal:8095"]
