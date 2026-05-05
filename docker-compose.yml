@@ -53,12 +53,15 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    command: start-dev
+      KC_HEALTH_ENABLED: "true"
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak/smartlingua-realm.json:/opt/keycloak/data/import/smartlingua-realm.json:ro
     ports:
       - "8081:8080"
     healthcheck:
       test:
-        ["CMD-SHELL", "curl -fs http://localhost:8080/health/ready || exit 1"]
+        ["CMD-SHELL", "curl -fs http://localhost:9000/health/ready || exit 1"]
       <<: *hc-defaults
     networks:
       - smartlingua-net
