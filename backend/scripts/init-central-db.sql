@@ -1,35 +1,26 @@
--- Base centrale SmartLingua - une seule base pour toute l'équipe
--- À exécuter dans PostgreSQL (client psql, pgAdmin, ou DBeaver).
+-- SmartLingua MySQL initialisation
+-- Creates one database per microservice (MySQL equivalent of schemas).
+-- The JDBC URLs use createDatabaseIfNotExist=true as a fallback,
+-- but pre-creating them here guarantees they exist before Hibernate starts.
 
--- ========== ÉTAPE 1 : Créer la base (à lancer une fois, connecté à la base "postgres") ==========
-CREATE DATABASE smartlingua_db
-  WITH ENCODING = 'UTF8';
+CREATE DATABASE IF NOT EXISTS smartlingua_users     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_courses   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_quiz      CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_exams     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_forum     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_messaging CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_privetcours CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_adaptive  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS smartlingua_ai        CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- ========== ÉTAPE 2 : Se connecter à la base smartlingua_db puis exécuter ci-dessous ==========
-
--- Schémas pour chaque microservice (chaque équipe travaille dans son schéma)
-CREATE SCHEMA IF NOT EXISTS courses;   -- microservice courses (cours)
-CREATE SCHEMA IF NOT EXISTS users;     -- microservice users (profils)
-CREATE SCHEMA IF NOT EXISTS quiz;      -- microservice quiz
-CREATE SCHEMA IF NOT EXISTS forum;     -- microservice forum
-CREATE SCHEMA IF NOT EXISTS exams;     -- microservice exams
-CREATE SCHEMA IF NOT EXISTS messaging; -- microservice messaging
-CREATE SCHEMA IF NOT EXISTS privetcours; -- microservice privetcours
-
--- Utilisateur commun pour les microservices (optionnel, plus sécurisé qu'utiliser postgres)
--- CREATE USER smartlingua_app WITH PASSWORD 'votre_mot_de_passe';
--- GRANT CONNECT ON DATABASE smartlingua_db TO smartlingua_app;
--- GRANT USAGE ON SCHEMA courses TO smartlingua_app;
--- GRANT USAGE ON SCHEMA users TO smartlingua_app;
--- GRANT USAGE ON SCHEMA quiz TO smartlingua_app;
--- GRANT USAGE ON SCHEMA forum TO smartlingua_app;
--- GRANT USAGE ON SCHEMA exams TO smartlingua_app;
--- GRANT USAGE ON SCHEMA messaging TO smartlingua_app;
--- GRANT USAGE ON SCHEMA privetcours TO smartlingua_app;
--- GRANT CREATE ON SCHEMA courses TO smartlingua_app;
--- GRANT CREATE ON SCHEMA users TO smartlingua_app;
--- GRANT CREATE ON SCHEMA quiz TO smartlingua_app;
--- GRANT CREATE ON SCHEMA forum TO smartlingua_app;
--- GRANT CREATE ON SCHEMA exams TO smartlingua_app;
--- GRANT CREATE ON SCHEMA messaging TO smartlingua_app;
--- GRANT CREATE ON SCHEMA privetcours TO smartlingua_app;
+-- Grant root access to all databases (root already has SUPER, this is a no-op but explicit)
+GRANT ALL PRIVILEGES ON smartlingua_users.*      TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_courses.*    TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_quiz.*       TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_exams.*      TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_forum.*      TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_messaging.*  TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_privetcours.* TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_adaptive.*   TO 'root'@'%';
+GRANT ALL PRIVILEGES ON smartlingua_ai.*         TO 'root'@'%';
+FLUSH PRIVILEGES;
