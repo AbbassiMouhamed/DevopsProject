@@ -1,0 +1,82 @@
+{
+  "__inputs": [{"name": "DS_PROMETHEUS", "label": "Prometheus", "type": "datasource", "pluginId": "prometheus"}],
+  "title": "SmartLingua — Microservices Overview",
+  "uid": "smartlingua-overview",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "type": "query",
+        "datasource": "Prometheus",
+        "query": "label_values(jvm_memory_used_bytes, application)",
+        "multi": true,
+        "includeAll": true,
+        "current": {"text": "All", "value": "$__all"}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Services UP",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "targets": [{"expr": "count(up{job=~\"$service\"} == 1)", "legendFormat": "UP"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "thresholds": {"steps": [{"color": "red", "value": 0}, {"color": "green", "value": 1}]}}}
+    },
+    {
+      "id": 2,
+      "title": "Services DOWN",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "targets": [{"expr": "count(up{job=~\"$service\"} == 0) or vector(0)", "legendFormat": "DOWN"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "thresholds": {"steps": [{"color": "green", "value": 0}, {"color": "red", "value": 1}]}}}
+    },
+    {
+      "id": 3,
+      "title": "HTTP Requests per Second",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [{"expr": "sum(rate(http_server_requests_seconds_count{application=~\"$service\"}[1m])) by (application)", "legendFormat": "{{application}}"}]
+    },
+    {
+      "id": 4,
+      "title": "JVM Heap Memory Used (MB)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+      "targets": [{"expr": "jvm_memory_used_bytes{area=\"heap\", application=~\"$service\"} / 1048576", "legendFormat": "{{application}}"}]
+    },
+    {
+      "id": 5,
+      "title": "HTTP Error Rate (5xx)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "targets": [{"expr": "sum(rate(http_server_requests_seconds_count{status=~\"5..\", application=~\"$service\"}[1m])) by (application)", "legendFormat": "{{application}} errors"}]
+    },
+    {
+      "id": 6,
+      "title": "HTTP p99 Response Time (ms)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+      "targets": [{"expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{application=~\"$service\"}[1m])) by (le, application)) * 1000", "legendFormat": "{{application}} p99"}]
+    },
+    {
+      "id": 7,
+      "title": "CPU Usage",
+      "type": "gauge",
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 20},
+      "targets": [{"expr": "process_cpu_usage{application=~\"$service\"}", "legendFormat": "{{application}}"}],
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}}
+    },
+    {
+      "id": 8,
+      "title": "Active DB Connections",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 6, "y": 20},
+      "targets": [{"expr": "hikaricp_connections_active{application=~\"$service\"}", "legendFormat": "{{application}}"}]
+    }
+  ]
+}

@@ -1,0 +1,522 @@
+################################################################################
+# SmartLingua — All Microservices Kubernetes Deployments + Services
+# Apply: kubectl apply -f k8s/microservices.yaml
+################################################################################
+
+# ── users ──────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users
+  namespace: smartlingua
+  labels:
+    app: users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users
+          image: smartlingua/users:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8087
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8087"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_users?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8087
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users
+  namespace: smartlingua
+spec:
+  selector:
+    app: users
+  ports:
+    - port: 8087
+      targetPort: 8087
+  type: ClusterIP
+---
+# ── courses ────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: courses
+  namespace: smartlingua
+  labels:
+    app: courses
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: courses
+  template:
+    metadata:
+      labels:
+        app: courses
+    spec:
+      containers:
+        - name: courses
+          image: smartlingua/courses:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8086
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8086"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_courses?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8086
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: courses
+  namespace: smartlingua
+spec:
+  selector:
+    app: courses
+  ports:
+    - port: 8086
+      targetPort: 8086
+  type: ClusterIP
+---
+# ── quiz ───────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz
+  namespace: smartlingua
+  labels:
+    app: quiz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz
+  template:
+    metadata:
+      labels:
+        app: quiz
+    spec:
+      containers:
+        - name: quiz
+          image: smartlingua/quiz:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8088
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8088"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_quiz?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz
+  namespace: smartlingua
+spec:
+  selector:
+    app: quiz
+  ports:
+    - port: 8088
+      targetPort: 8088
+  type: ClusterIP
+---
+# ── exams ──────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exams
+  namespace: smartlingua
+  labels:
+    app: exams
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exams
+  template:
+    metadata:
+      labels:
+        app: exams
+    spec:
+      containers:
+        - name: exams
+          image: smartlingua/exams:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8089
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8089"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_exams?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8089
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exams
+  namespace: smartlingua
+spec:
+  selector:
+    app: exams
+  ports:
+    - port: 8089
+      targetPort: 8089
+  type: ClusterIP
+---
+# ── forum ──────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forum
+  namespace: smartlingua
+  labels:
+    app: forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forum
+  template:
+    metadata:
+      labels:
+        app: forum
+    spec:
+      containers:
+        - name: forum
+          image: smartlingua/forum:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8096
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8096"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_forum?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8096
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forum
+  namespace: smartlingua
+spec:
+  selector:
+    app: forum
+  ports:
+    - port: 8096
+      targetPort: 8096
+  type: ClusterIP
+---
+# ── messaging ──────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging
+  namespace: smartlingua
+  labels:
+    app: messaging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messaging
+  template:
+    metadata:
+      labels:
+        app: messaging
+    spec:
+      containers:
+        - name: messaging
+          image: smartlingua/messaging:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8092
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8092"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_messaging?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8092
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging
+  namespace: smartlingua
+spec:
+  selector:
+    app: messaging
+  ports:
+    - port: 8092
+      targetPort: 8092
+  type: ClusterIP
+---
+# ── privetcours ────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: privetcours
+  namespace: smartlingua
+  labels:
+    app: privetcours
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: privetcours
+  template:
+    metadata:
+      labels:
+        app: privetcours
+    spec:
+      containers:
+        - name: privetcours
+          image: smartlingua/privetcours:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8091
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8091"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_privetcours?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8091
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: privetcours
+  namespace: smartlingua
+spec:
+  selector:
+    app: privetcours
+  ports:
+    - port: 8091
+      targetPort: 8091
+  type: ClusterIP
+---
+# ── adaptive-learning ──────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adaptive-learning
+  namespace: smartlingua
+  labels:
+    app: adaptive-learning
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adaptive-learning
+  template:
+    metadata:
+      labels:
+        app: adaptive-learning
+    spec:
+      containers:
+        - name: adaptive-learning
+          image: smartlingua/adaptive-learning:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8094
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8094"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_adaptive?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8094
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adaptive-learning
+  namespace: smartlingua
+spec:
+  selector:
+    app: adaptive-learning
+  ports:
+    - port: 8094
+      targetPort: 8094
+  type: ClusterIP
+---
+# ── ai-assistant ───────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-assistant
+  namespace: smartlingua
+  labels:
+    app: ai-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-assistant
+  template:
+    metadata:
+      labels:
+        app: ai-assistant
+    spec:
+      containers:
+        - name: ai-assistant
+          image: smartlingua/ai-assistant:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8095
+          envFrom:
+            - configMapRef:
+                name: smartlingua-env
+            - secretRef:
+                name: smartlingua-secrets
+          env:
+            - name: SERVER_PORT
+              value: "8095"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/smartlingua_ai?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+            - name: SPRING_AI_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: smartlingua-secrets
+                  key: OPENAI_API_KEY
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8095
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests: { memory: "256Mi", cpu: "150m" }
+            limits: { memory: "512Mi", cpu: "500m" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-assistant
+  namespace: smartlingua
+spec:
+  selector:
+    app: ai-assistant
+  ports:
+    - port: 8095
+      targetPort: 8095
+  type: ClusterIP

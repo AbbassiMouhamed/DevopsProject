@@ -1,0 +1,27 @@
+################################################################################
+# SmartLingua — Kustomization
+# Apply everything:
+#   kubectl apply -k k8s/
+#
+# Or apply individual files:
+#   kubectl apply -f k8s/namespace.yaml
+#   kubectl apply -f k8s/configmap-env.yaml
+#   kubectl apply -f k8s/mysql.yaml
+#   ... etc
+################################################################################
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: smartlingua
+
+resources:
+  - namespace.yaml
+  - configmap-env.yaml
+  - mysql.yaml
+  - keycloak.yaml
+  - eureka.yaml
+  - config-server.yaml
+  - api-gateway.yaml
+  - microservices.yaml
+  - frontend.yaml
+  - monitoring.yaml
