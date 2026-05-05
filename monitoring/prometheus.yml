@@ -62,13 +62,3 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: ["ai-assistant:8095"]
-
-  - job_name: "ai-assistant-service"
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: ["ai-assistant:8095"]
-
-  - job_name: "privetcours"
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: ["host.docker.internal:8095"]
