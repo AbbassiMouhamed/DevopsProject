@@ -39,11 +39,22 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 4200,  host: 4200,  host_ip: "127.0.0.1"   # Frontend
   config.vm.network "forwarded_port", guest: 8093,  host: 8093,  host_ip: "127.0.0.1"   # API Gateway
   config.vm.network "forwarded_port", guest: 8761,  host: 8761,  host_ip: "127.0.0.1"   # Eureka
+  config.vm.network "forwarded_port", guest: 8890,  host: 8890,  host_ip: "127.0.0.1"   # Config Server
   config.vm.network "forwarded_port", guest: 8081,  host: 8081,  host_ip: "127.0.0.1"   # Keycloak
   config.vm.network "forwarded_port", guest: 9090,  host: 9090,  host_ip: "127.0.0.1"   # Prometheus
   config.vm.network "forwarded_port", guest: 3000,  host: 3000,  host_ip: "127.0.0.1"   # Grafana
   config.vm.network "forwarded_port", guest: 3306,  host: 3306,  host_ip: "127.0.0.1"   # MySQL
   config.vm.network "forwarded_port", guest: 6443,  host: 6443,  host_ip: "127.0.0.1"   # K8s API server
+  # Microservices (direct access for debugging / actuator)
+  config.vm.network "forwarded_port", guest: 8087,  host: 8087,  host_ip: "127.0.0.1"   # users
+  config.vm.network "forwarded_port", guest: 8086,  host: 8086,  host_ip: "127.0.0.1"   # courses
+  config.vm.network "forwarded_port", guest: 8088,  host: 8088,  host_ip: "127.0.0.1"   # quiz
+  config.vm.network "forwarded_port", guest: 8089,  host: 8089,  host_ip: "127.0.0.1"   # exams
+  config.vm.network "forwarded_port", guest: 8096,  host: 8096,  host_ip: "127.0.0.1"   # forum
+  config.vm.network "forwarded_port", guest: 8092,  host: 8092,  host_ip: "127.0.0.1"   # messaging
+  config.vm.network "forwarded_port", guest: 8091,  host: 8091,  host_ip: "127.0.0.1"   # privetcours
+  config.vm.network "forwarded_port", guest: 8094,  host: 8094,  host_ip: "127.0.0.1"   # adaptive-learning
+  config.vm.network "forwarded_port", guest: 8095,  host: 8095,  host_ip: "127.0.0.1"   # ai-assistant
 
   # ── Resources ────────────────────────────────────────────────────────────────
   config.vm.provider "virtualbox" do |vb|
