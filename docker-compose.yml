@@ -17,6 +17,9 @@ x-spring-common: &spring-common
   SPRING_CLOUD_CONFIG_URI: http://config-server:8890
   CORS_ALLOWED_ORIGINS: "http://localhost:4200,http://frontend"
   KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/smartlingua
+  # Heartbeat every 10 s; expire stale registration after 30 s
+  EUREKA_INSTANCE_LEASE-RENEWAL-INTERVAL-IN-SECONDS: "10"
+  EUREKA_INSTANCE_LEASE-EXPIRATION-DURATION-IN-SECONDS: "30"
 
 x-healthcheck-defaults: &hc-defaults
   interval: 30s
@@ -76,6 +79,9 @@ services:
       SERVER_PORT: "8761"
       EUREKA_CLIENT_REGISTER-WITH-EUREKA: "false"
       EUREKA_CLIENT_FETCH-REGISTRY: "false"
+      EUREKA_SERVER_ENABLE-SELF-PRESERVATION: "false"
+      EUREKA_SERVER_RENEWAL-PERCENT-THRESHOLD: "0.49"
+      EUREKA_SERVER_EVICTION-INTERVAL-TIMER-IN-MS: "5000"
     ports:
       - "8761:8761"
     healthcheck:
@@ -127,6 +133,8 @@ services:
     depends_on:
       eureka:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -159,6 +167,8 @@ services:
         condition: service_healthy
       eureka:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -186,65 +196,13 @@ services:
         condition: service_healthy
       eureka:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
     healthcheck:
       test:
         [
           "CMD-SHELL",
           'wget -qO- http://localhost:8086/actuator/health | grep -q ''"status":"UP"''',
-        ]
-      <<: *hc-defaults
-    networks:
-      - smartlingua-net
-
-  quiz:
-    build:
-      context: ./backend/microservices/quiz
-      dockerfile: Dockerfile
-    image: smartlingua/quiz:latest
-    container_name: smartlingua-quiz
-    environment:
-      SERVER_PORT: "8088"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/smartlingua_quiz?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-      <<: [*mysql-env, *spring-common]
-    ports:
-      - "8088:8088"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eureka:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'wget -qO- http://localhost:8088/actuator/health | grep -q ''"status":"UP"''',
-        ]
-      <<: *hc-defaults
-    networks:
-      - smartlingua-net
-
-  exams:
-    build:
-      context: ./backend/microservices/exams
-      dockerfile: Dockerfile
-    image: smartlingua/exams:latest
-    container_name: smartlingua-exams
-    environment:
-      SERVER_PORT: "8089"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/smartlingua_exams?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-      <<: [*mysql-env, *spring-common]
-    ports:
-      - "8089:8089"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eureka:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'wget -qO- http://localhost:8089/actuator/health | grep -q ''"status":"UP"''',
         ]
       <<: *hc-defaults
     networks:
@@ -266,6 +224,8 @@ services:
       mysql:
         condition: service_healthy
       eureka:
+        condition: service_healthy
+      config-server:
         condition: service_healthy
     healthcheck:
       test:
@@ -294,38 +254,13 @@ services:
         condition: service_healthy
       eureka:
         condition: service_healthy
+      config-server:
+        condition: service_healthy
     healthcheck:
       test:
         [
           "CMD-SHELL",
           'wget -qO- http://localhost:8092/actuator/health | grep -q ''"status":"UP"''',
-        ]
-      <<: *hc-defaults
-    networks:
-      - smartlingua-net
-
-  privetcours:
-    build:
-      context: ./backend/microservices/privetcours
-      dockerfile: Dockerfile
-    image: smartlingua/privetcours:latest
-    container_name: smartlingua-privetcours
-    environment:
-      SERVER_PORT: "8091"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/smartlingua_privetcours?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-      <<: [*mysql-env, *spring-common]
-    ports:
-      - "8091:8091"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      eureka:
-        condition: service_healthy
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'wget -qO- http://localhost:8091/actuator/health | grep -q ''"status":"UP"''',
         ]
       <<: *hc-defaults
     networks:
@@ -349,6 +284,8 @@ services:
       mysql:
         condition: service_healthy
       eureka:
+        condition: service_healthy
+      config-server:
         condition: service_healthy
     healthcheck:
       test:
@@ -377,6 +314,8 @@ services:
       mysql:
         condition: service_healthy
       eureka:
+        condition: service_healthy
+      config-server:
         condition: service_healthy
     healthcheck:
       test:
