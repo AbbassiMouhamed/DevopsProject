@@ -1,7 +1,7 @@
 git
 workflow-aggregator
 pipeline-stage-view
-sonarqube
+sonar
 credentials-binding
 ssh-credentials
 ssh-steps
