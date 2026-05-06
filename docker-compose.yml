@@ -453,7 +453,7 @@ services:
     image: smartlingua/jenkins:latest
     container_name: smartlingua-jenkins
     ports:
-      - "3219:8080" # Web UI → http://localhost:3219
+      - "3219:8080" # Web UI → http://localhost:3219  (container always listens on 8080)
       - "50000:50000" # Agent JNLP
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
