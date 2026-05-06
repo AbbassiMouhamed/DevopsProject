@@ -48,6 +48,7 @@ Everything else (Docker, Java, Maven, Node.js, kubectl, Helm) is pre-installed *
 | Jenkins UI | http://localhost:3219 |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 |
+| SonarQube | http://localhost:9000 |
 | MySQL | localhost:3306 |
 | Users service | http://localhost:8087 |
 | Courses service | http://localhost:8086 |
@@ -197,6 +198,8 @@ Repeat for `smartlingua-frontend` using `Jenkinsfile-frontend`.
    - Token: add as a Jenkins Secret Text credential (credentialId: `sonar-token`)
 3. **Save**
 
+> See [Section 7](#7-sonarqube--code-quality) for how to start SonarQube and generate a token.
+
 ### Pipeline stages
 
 **Backend pipeline** (`Jenkinsfile-backend`):
@@ -235,13 +238,39 @@ Add these in **Manage Jenkins → Credentials**:
 
 ## 7. SonarQube — Code Quality
 
-### Using SonarScanner manually (inside the VM)
+### Start SonarQube
+
+SonarQube runs as a Docker container alongside the stack. Start it inside the VM:
+
+```bash
+cd ~/DevopsProject
+docker compose up -d sonarqube
+
+# Wait ~60s for it to initialize, then check:
+docker compose logs -f sonarqube
+# Ready when you see: "SonarQube is operational"
+```
+
+### Access & first login
+
+Open **http://localhost:9000**
+
+- Default credentials: `admin` / `admin`
+- On first login SonarQube will ask you to change the password — set it to something you remember (e.g. `admin123`)
+
+### Generate a token
+
+1. Go to **My Account → Security → Generate Tokens**
+2. Name: `smartlingua`, type: **Global Analysis Token**
+3. Copy the token — you will need it for `SONAR_TOKEN`
+
+### Run SonarScanner manually (inside the VM)
 
 ```bash
 cd ~/DevopsProject
 
 # Backend — run from repo root
-SONAR_HOST_URL=http://localhost:9000 \
+SONAR_HOST_URL=http://sonarqube:9000 \
 SONAR_TOKEN=<your-token> \
 sonar-scanner \
   -Dsonar.projectKey=smartlingua-backend \
@@ -250,7 +279,7 @@ sonar-scanner \
   -Dsonar.coverage.jacoco.xmlReportPaths=backend/**/target/site/jacoco/jacoco.xml
 
 # Frontend
-SONAR_HOST_URL=http://localhost:9000 \
+SONAR_HOST_URL=http://sonarqube:9000 \
 SONAR_TOKEN=<your-token> \
 sonar-scanner \
   -Dsonar.projectKey=smartlingua-frontend \
@@ -259,14 +288,23 @@ sonar-scanner \
   -Dsonar.typescript.tsconfigPath=frontend/tsconfig.json
 ```
 
+> **Note:** Use `http://sonarqube:9000` when running **inside the Docker network** (VM shell / Jenkins pipeline). Use `http://localhost:9000` only from the **Windows host browser**.
+
 ### Using `sonar-project.properties` (repo root)
 
 ```bash
 # Set env vars and run from repo root
-export SONAR_HOST_URL=http://localhost:9000
+export SONAR_HOST_URL=http://sonarqube:9000
 export SONAR_TOKEN=<your-token>
 sonar-scanner
 ```
+
+### Configure SonarQube server in Jenkins
+
+1. **Manage Jenkins → System → SonarQube servers → Add SonarQube**
+2. Name: `sonarqube`, URL: `http://sonarqube:9000`
+3. Authentication token: add a **Secret Text** credential with your token, ID = `sonar-token`
+4. **Save**
 
 ---
 
