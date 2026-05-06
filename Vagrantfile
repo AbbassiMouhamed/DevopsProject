@@ -51,11 +51,8 @@ Vagrant.configure("2") do |config|
   # Microservices (direct access for debugging / actuator)
   config.vm.network "forwarded_port", guest: 8087,  host: 8087,  host_ip: "127.0.0.1"   # users
   config.vm.network "forwarded_port", guest: 8086,  host: 8086,  host_ip: "127.0.0.1"   # courses
-  config.vm.network "forwarded_port", guest: 8088,  host: 8088,  host_ip: "127.0.0.1"   # quiz
-  config.vm.network "forwarded_port", guest: 8089,  host: 8089,  host_ip: "127.0.0.1"   # exams
   config.vm.network "forwarded_port", guest: 8096,  host: 8096,  host_ip: "127.0.0.1"   # forum
   config.vm.network "forwarded_port", guest: 8092,  host: 8092,  host_ip: "127.0.0.1"   # messaging
-  config.vm.network "forwarded_port", guest: 8091,  host: 8091,  host_ip: "127.0.0.1"   # privetcours
   config.vm.network "forwarded_port", guest: 8094,  host: 8094,  host_ip: "127.0.0.1"   # adaptive-learning
   config.vm.network "forwarded_port", guest: 8095,  host: 8095,  host_ip: "127.0.0.1"   # ai-assistant
 

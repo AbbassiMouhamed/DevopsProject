@@ -29,11 +29,8 @@ pipeline {
             'backend/microservices/forum',
             'backend/microservices/messaging',
             'backend/microservices/courses',
-            'backend/microservices/quiz',
-            'backend/microservices/exams',
             'backend/microservices/adaptive-learning',
-            'backend/microservices/ai-assistant-service',
-            'backend/microservices/privetcours'
+            'backend/microservices/ai-assistant-service'
           ]
 
           def branches = [:]
@@ -68,11 +65,8 @@ pipeline {
             'backend/microservices/forum',
             'backend/microservices/messaging',
             'backend/microservices/courses',
-            'backend/microservices/quiz',
-            'backend/microservices/exams',
             'backend/microservices/adaptive-learning',
-            'backend/microservices/ai-assistant-service',
-            'backend/microservices/privetcours'
+            'backend/microservices/ai-assistant-service'
           ]
 
           def branches = [:]

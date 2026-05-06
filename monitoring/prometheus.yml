@@ -28,16 +28,6 @@ scrape_configs:
     static_configs:
       - targets: ["courses:8086"]
 
-  - job_name: "quiz"
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: ["quiz:8088"]
-
-  - job_name: "exams"
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: ["exams:8089"]
-
   - job_name: "forum"
     metrics_path: /actuator/prometheus
     static_configs:
@@ -47,11 +37,6 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: ["messaging:8092"]
-
-  - job_name: "privetcours"
-    metrics_path: /actuator/prometheus
-    static_configs:
-      - targets: ["privetcours:8091"]
 
   - job_name: "adaptive-learning"
     metrics_path: /actuator/prometheus
