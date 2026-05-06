@@ -51,10 +51,7 @@
         "http://localhost:4200/*",
         "http://192.168.56.10:4200/*"
       ],
-      "webOrigins": [
-        "http://localhost:4200",
-        "http://192.168.56.10:4200"
-      ],
+      "webOrigins": ["http://localhost:4200", "http://192.168.56.10:4200"],
       "attributes": {
         "pkce.code.challenge.method": "S256"
       },

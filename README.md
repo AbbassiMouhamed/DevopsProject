@@ -26,11 +26,11 @@ SmartLingua is an e-learning platform with adaptive learning paths, course catal
 
 Install these on your **Windows host** before starting:
 
-| Tool | Version | Download |
-|---|---|---|
-| VirtualBox | 7.x | https://www.virtualbox.org |
-| Vagrant | 2.4+ | https://www.vagrantup.com |
-| Git | latest | https://git-scm.com |
+| Tool       | Version | Download                   |
+| ---------- | ------- | -------------------------- |
+| VirtualBox | 7.x     | https://www.virtualbox.org |
+| Vagrant    | 2.4+    | https://www.vagrantup.com  |
+| Git        | latest  | https://git-scm.com        |
 
 Everything else (Docker, Java, Maven, Node.js, kubectl, Helm) is pre-installed **inside the VM** by the Vagrantfile provisioner.
 
@@ -38,27 +38,27 @@ Everything else (Docker, Java, Maven, Node.js, kubectl, Helm) is pre-installed *
 
 ## 2. Port Reference
 
-| Service | URL (Windows host browser) |
-|---|---|
-| Frontend (Angular) | http://localhost:4200 |
-| API Gateway | http://localhost:8093 |
-| Eureka Dashboard | http://localhost:8761 |
-| Config Server | http://localhost:8890 |
-| Keycloak Admin | http://localhost:8081 |
-| Jenkins UI | http://localhost:3219 |
-| Prometheus | http://localhost:9090 |
-| Grafana | http://localhost:3000 |
-| SonarQube | http://localhost:9000 |
-| MySQL | localhost:3306 |
-| Users service | http://localhost:8087 |
-| Courses service | http://localhost:8086 |
-| Quiz service | http://localhost:8088 |
-| Exams service | http://localhost:8089 |
-| Forum service | http://localhost:8096 |
-| Messaging service | http://localhost:8092 |
-| Privet Cours service | http://localhost:8091 |
-| Adaptive Learning | http://localhost:8094 |
-| AI Assistant | http://localhost:8095 |
+| Service              | URL (Windows host browser) |
+| -------------------- | -------------------------- |
+| Frontend (Angular)   | http://localhost:4200      |
+| API Gateway          | http://localhost:8093      |
+| Eureka Dashboard     | http://localhost:8761      |
+| Config Server        | http://localhost:8890      |
+| Keycloak Admin       | http://localhost:8081      |
+| Jenkins UI           | http://localhost:3219      |
+| Prometheus           | http://localhost:9090      |
+| Grafana              | http://localhost:3000      |
+| SonarQube            | http://localhost:9000      |
+| MySQL                | localhost:3306             |
+| Users service        | http://localhost:8087      |
+| Courses service      | http://localhost:8086      |
+| Quiz service         | http://localhost:8088      |
+| Exams service        | http://localhost:8089      |
+| Forum service        | http://localhost:8096      |
+| Messaging service    | http://localhost:8092      |
+| Privet Cours service | http://localhost:8091      |
+| Adaptive Learning    | http://localhost:8094      |
+| AI Assistant         | http://localhost:8095      |
 
 ---
 
@@ -122,6 +122,7 @@ docker compose down -v
 ### Startup order
 
 The services start automatically in dependency order. Wait approximately:
+
 - **30 s** — MySQL ready
 - **60 s** — Keycloak ready (realm `smartlingua` auto-imported)
 - **90 s** — Eureka + Config Server ready
@@ -129,13 +130,13 @@ The services start automatically in dependency order. Wait approximately:
 
 ### Default credentials
 
-| Service | Username | Password |
-|---|---|---|
-| Keycloak admin console | `admin` | `admin` |
-| MySQL root | `root` | `root` |
-| App user (student) | `student` | `student123` |
-| App user (teacher) | `teacher` | `teacher123` |
-| App user (admin) | `admin` | `admin123` |
+| Service                | Username  | Password     |
+| ---------------------- | --------- | ------------ |
+| Keycloak admin console | `admin`   | `admin`      |
+| MySQL root             | `root`    | `root`       |
+| App user (student)     | `student` | `student123` |
+| App user (teacher)     | `teacher` | `teacher123` |
+| App user (admin)       | `admin`   | `admin123`   |
 
 ---
 
@@ -204,34 +205,34 @@ Repeat for `smartlingua-frontend` using `Jenkinsfile-frontend`.
 
 **Backend pipeline** (`Jenkinsfile-backend`):
 
-| Stage | What it does |
-|---|---|
-| Test | Runs `mvn test` in parallel for all 12 microservices |
-| Build | Runs `mvn clean package` in parallel for all 12 microservices |
-| SonarQube Backend | Runs SonarScanner with JaCoCo XML coverage |
-| Deploy Backend | SSH to server, `git pull`, `docker compose up -d` |
+| Stage             | What it does                                                  |
+| ----------------- | ------------------------------------------------------------- |
+| Test              | Runs `mvn test` in parallel for all 12 microservices          |
+| Build             | Runs `mvn clean package` in parallel for all 12 microservices |
+| SonarQube Backend | Runs SonarScanner with JaCoCo XML coverage                    |
+| Deploy Backend    | SSH to server, `git pull`, `docker compose up -d`             |
 
 **Frontend pipeline** (`Jenkinsfile-frontend`):
 
-| Stage | What it does |
-|---|---|
-| Install | `npm install` |
-| Build | `npm run build` |
-| Test | `npm test` with ChromeHeadless + code coverage |
-| SonarQube Frontend | Runs SonarScanner with LCOV coverage |
-| Deploy Frontend | SSH to server, `git pull`, `docker compose up -d` |
+| Stage              | What it does                                      |
+| ------------------ | ------------------------------------------------- |
+| Install            | `npm install`                                     |
+| Build              | `npm run build`                                   |
+| Test               | `npm test` with ChromeHeadless + code coverage    |
+| SonarQube Frontend | Runs SonarScanner with LCOV coverage              |
+| Deploy Frontend    | SSH to server, `git pull`, `docker compose up -d` |
 
 ### Jenkins credentials required for deploy
 
 Add these in **Manage Jenkins → Credentials**:
 
-| ID | Type | Value |
-|---|---|---|
-| `backend-deploy-host` | Secret text | Target server IP/hostname |
-| `backend-deploy-user` | Secret text | SSH username |
-| `backend-deploy-ssh-key` | SSH private key | Private key for SSH access |
-| `frontend-deploy-host` | Secret text | Target server IP/hostname |
-| `frontend-deploy-user` | Secret text | SSH username |
+| ID                        | Type            | Value                      |
+| ------------------------- | --------------- | -------------------------- |
+| `backend-deploy-host`     | Secret text     | Target server IP/hostname  |
+| `backend-deploy-user`     | Secret text     | SSH username               |
+| `backend-deploy-ssh-key`  | SSH private key | Private key for SSH access |
+| `frontend-deploy-host`    | Secret text     | Target server IP/hostname  |
+| `frontend-deploy-user`    | Secret text     | SSH username               |
 | `frontend-deploy-ssh-key` | SSH private key | Private key for SSH access |
 
 ---
@@ -360,12 +361,13 @@ npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
 Two workflows run automatically on every push/PR:
 
-| Workflow | File | Trigger |
-|---|---|---|
-| SmartLingua CI | `.github/workflows/ci.yml` | Every push and PR |
+| Workflow                   | File                          | Trigger                                 |
+| -------------------------- | ----------------------------- | --------------------------------------- |
+| SmartLingua CI             | `.github/workflows/ci.yml`    | Every push and PR                       |
 | SmartLingua CI/CD Sprint 3 | `.github/workflows/ci-cd.yml` | Push to `main`, `develop`, `feature/**` |
 
 Both workflows:
+
 - Spin up MySQL 8.0 as a service container
 - Test all 12 backend microservices in parallel (matrix strategy)
 - Build each microservice with `mvn clean install`
@@ -378,13 +380,13 @@ Go to your GitHub repository → **Actions** tab → click any workflow run to s
 
 Add these in **GitHub → Settings → Secrets and variables → Actions**:
 
-| Secret | Description |
-|---|---|
-| `SONAR_TOKEN` | SonarQube/SonarCloud authentication token |
-| `SONAR_HOST_URL` | SonarQube server URL |
-| `DEPLOY_HOST` | SSH target server IP |
-| `DEPLOY_USER` | SSH username |
-| `DEPLOY_SSH_KEY` | SSH private key (PEM format) |
+| Secret           | Description                               |
+| ---------------- | ----------------------------------------- |
+| `SONAR_TOKEN`    | SonarQube/SonarCloud authentication token |
+| `SONAR_HOST_URL` | SonarQube server URL                      |
+| `DEPLOY_HOST`    | SSH target server IP                      |
+| `DEPLOY_USER`    | SSH username                              |
+| `DEPLOY_SSH_KEY` | SSH private key (PEM format)              |
 
 ---
 

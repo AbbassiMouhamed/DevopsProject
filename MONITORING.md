@@ -33,7 +33,7 @@ Frontend monitoring in this sprint is done with runtime and build checks:
 ### Local frontend checks
 
 ```bash
-cd frontend
+cd frontendw
 npm install
 npm run build
 npm test --if-present
