@@ -453,13 +453,13 @@ services:
     image: smartlingua/jenkins:latest
     container_name: smartlingua-jenkins
     ports:
-      - "8080:8080"   # Web UI
+      - "3219:8080" # Web UI → http://localhost:3219
       - "50000:50000" # Agent JNLP
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock  # Docker-in-Docker via host socket
+      - /var/run/docker.sock:/var/run/docker.sock # Docker-in-Docker via host socket
     restart: unless-stopped
     networks:
       - smartlingua-net
