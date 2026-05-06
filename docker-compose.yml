@@ -16,7 +16,9 @@ x-spring-common: &spring-common
   EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka
   SPRING_CLOUD_CONFIG_URI: http://config-server:8890
   CORS_ALLOWED_ORIGINS: "http://localhost:4200,http://frontend"
-  KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/smartlingua
+  # Correct Spring Boot env var for spring.security.oauth2.resourceserver.jwt.issuer-uri
+  # (replaces the old KEYCLOAK_ISSUER_URI which Spring never recognised)
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/smartlingua
   # Heartbeat every 10 s; expire stale registration after 30 s
   EUREKA_INSTANCE_LEASE-RENEWAL-INTERVAL-IN-SECONDS: "10"
   EUREKA_INSTANCE_LEASE-EXPIRATION-DURATION-IN-SECONDS: "30"
@@ -169,6 +171,8 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -197,6 +201,8 @@ services:
       eureka:
         condition: service_healthy
       config-server:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
     healthcheck:
       test:
@@ -227,6 +233,8 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -255,6 +263,8 @@ services:
       eureka:
         condition: service_healthy
       config-server:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
     healthcheck:
       test:
@@ -287,6 +297,8 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -316,6 +328,8 @@ services:
       eureka:
         condition: service_healthy
       config-server:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
     healthcheck:
       test:
