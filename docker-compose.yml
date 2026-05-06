@@ -442,6 +442,28 @@ services:
     networks:
       - smartlingua-net
 
+  # ──────────────────────────────────────────────────────────────────────────────
+  # CI/CD
+  # ──────────────────────────────────────────────────────────────────────────────
+
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    image: smartlingua/jenkins:latest
+    container_name: smartlingua-jenkins
+    ports:
+      - "8080:8080"   # Web UI
+      - "50000:50000" # Agent JNLP
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker-in-Docker via host socket
+    restart: unless-stopped
+    networks:
+      - smartlingua-net
+
 # ──────────────────────────────────────────────────────────────────────────────
 # VOLUMES & NETWORKS
 # ──────────────────────────────────────────────────────────────────────────────
@@ -450,6 +472,7 @@ volumes:
   mysql_data:
   prometheus_data:
   grafana_data:
+  jenkins_home:
 
 networks:
   smartlingua-net:

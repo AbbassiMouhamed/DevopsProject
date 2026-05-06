@@ -1,0 +1,16 @@
+git
+workflow-aggregator
+pipeline-stage-view
+sonarqube
+credentials-binding
+ssh-credentials
+ssh-steps
+docker-workflow
+blueocean
+junit
+jacoco
+nodejs
+mailer
+build-timeout
+timestamper
+ws-cleanup

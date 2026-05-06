@@ -45,6 +45,8 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 3000,  host: 3000,  host_ip: "127.0.0.1"   # Grafana
   config.vm.network "forwarded_port", guest: 3306,  host: 3306,  host_ip: "127.0.0.1"   # MySQL
   config.vm.network "forwarded_port", guest: 6443,  host: 6443,  host_ip: "127.0.0.1"   # K8s API server
+  config.vm.network "forwarded_port", guest: 8080,  host: 8080,  host_ip: "127.0.0.1"   # Jenkins UI
+  config.vm.network "forwarded_port", guest: 50000, host: 50000, host_ip: "127.0.0.1"   # Jenkins agents
   # Microservices (direct access for debugging / actuator)
   config.vm.network "forwarded_port", guest: 8087,  host: 8087,  host_ip: "127.0.0.1"   # users
   config.vm.network "forwarded_port", guest: 8086,  host: 8086,  host_ip: "127.0.0.1"   # courses
