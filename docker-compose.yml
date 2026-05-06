@@ -59,15 +59,21 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: "true"
+      KC_HTTP_MANAGEMENT_PORT: "9000"
     command: start-dev --import-realm
     volumes:
       - ./keycloak/smartlingua-realm.json:/opt/keycloak/data/import/smartlingua-realm.json:ro
     ports:
       - "8081:8080"
+      - "9000:9000"
     healthcheck:
+      # Try management port first (9000), fall back to main port (8080)
       test:
-        ["CMD-SHELL", "curl -fs http://localhost:9000/health/ready || exit 1"]
-      <<: *hc-defaults
+        ["CMD-SHELL", "curl -fs http://localhost:9000/health/ready || curl -fs http://localhost:8080/health/ready || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
     networks:
       - smartlingua-net
 
