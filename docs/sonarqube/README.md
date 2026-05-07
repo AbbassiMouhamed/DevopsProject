@@ -40,7 +40,7 @@ Never hard-code the token. Export it in your shell or CI secret store:
 ```bash
 # .env or shell profile — DO NOT commit this file
 export SONAR_HOST_URL=http://localhost:9000
-export SONAR_TOKEN=squ_xxxxxxxxxxxxxxxxxxxx
+export SONAR_TOKEN=sqp_a67ea444c994ca2fef4bc8d57009b49e052c88f2
 ```
 
 The `sonar-project.properties` files in this repo already reference these via
