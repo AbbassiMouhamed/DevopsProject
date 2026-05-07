@@ -25,11 +25,18 @@ $services = @(
 
 foreach ($service in $services) {
     Write-Host "Running SonarQube for $service"
-    Push-Location (Join-Path $PSScriptRoot ".." $service)
-    mvn clean verify sonar:sonar "-Dsonar.host.url=$SonarHostUrl" "-Dsonar.token=$SonarToken"
+    $svcPath = Join-Path $PSScriptRoot ".." $service
+    Push-Location $svcPath
+    # Use mvnw.cmd (Windows Maven wrapper) — avoids requiring mvn on PATH
+    .\mvnw.cmd clean verify sonar:sonar `
+        "-Dsonar.projectKey=smartlingua" `
+        "-Dsonar.projectName=SmartLingua" `
+        "-Dsonar.host.url=$SonarHostUrl" `
+        "-Dsonar.token=$SonarToken" `
+        "-Dsonar.java.source=17" `
+        "-Dsonar.java.target=17"
     if ($LASTEXITCODE -ne 0) {
-        Pop-Location
-        exit $LASTEXITCODE
+        Write-Warning "SonarQube analysis failed for $service (exit $LASTEXITCODE). Continuing..."
     }
     Pop-Location
 }

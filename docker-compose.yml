@@ -68,7 +68,10 @@ services:
     healthcheck:
       # Try management port first (9000), fall back to main port (8080)
       test:
-        ["CMD-SHELL", "curl -fs http://localhost:9000/health/ready || curl -fs http://localhost:8080/health/ready || exit 1"]
+        [
+          "CMD-SHELL",
+          "curl -fs http://localhost:9000/health/ready || curl -fs http://localhost:8080/health/ready || exit 1",
+        ]
       interval: 20s
       timeout: 10s
       retries: 10
