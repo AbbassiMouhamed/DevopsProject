@@ -1,3 +1,14 @@
+################################################################################
+# Keycloak Deployment
+#
+# Image: quay.io/keycloak/keycloak (official registry — Docker Hub mirror
+#        "keycloak/keycloak" does NOT exist and will fail ImagePullBackOff)
+#
+# Pre-requisite: create the realm ConfigMap before applying:
+#   kubectl create configmap keycloak-realm \
+#     --from-file=smartlingua-realm.json=keycloak/smartlingua-realm.json \
+#     -n smartlingua
+################################################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,8 +28,13 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: keycloak/keycloak:25.0.6
-          args: ["start-dev"]
+          # Official Keycloak image lives on quay.io, NOT Docker Hub.
+          # "keycloak/keycloak" on Docker Hub does not exist → ImagePullBackOff.
+          image: quay.io/keycloak/keycloak:25.0.6
+          args:
+            - start-dev
+            - --health-enabled=true # required for /health/ready probe to return 200
+            - --import-realm # auto-import any JSON in /opt/keycloak/data/import/
           ports:
             - containerPort: 8080
           env:
@@ -32,12 +48,29 @@ spec:
                 secretKeyRef:
                   name: smartlingua-secrets
                   key: KEYCLOAK_ADMIN_PASSWORD
+            # Disable hostname strict mode for dev/K8s local clusters
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"
+          volumeMounts:
+            - name: realm-import
+              mountPath: /opt/keycloak/data/import
+              readOnly: true
           readinessProbe:
             httpGet:
               path: /health/ready
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 90
             periodSeconds: 15
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            failureThreshold: 3
           resources:
             requests:
               memory: "512Mi"
@@ -45,6 +78,10 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
+      volumes:
+        - name: realm-import
+          configMap:
+            name: keycloak-realm
 ---
 apiVersion: v1
 kind: Service
